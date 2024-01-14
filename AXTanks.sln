@@ -1,0 +1,19 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AXTanks", "AXTanks.csproj", "{947613E3-0B19-4C71-96B1-1F050DFDA19B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	ExportDebug|Any CPU = ExportDebug|Any CPU
+	ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{947613E3-0B19-4C71-96B1-1F050DFDA19B}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal
