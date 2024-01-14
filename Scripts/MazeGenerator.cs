@@ -1,5 +1,4 @@
-using System;
-using System.Text;
+using AXTanks.Scripts.Extensions;
 using Godot;
 
 namespace AXTanks.Scripts;
@@ -17,70 +16,71 @@ public partial class MazeGenerator : Node2D
 
     public override void _Ready()
     {
-        _size = new Vector2I(2 * Random.Shared.Next(_minSize.X, _maxSize.X) + 1,
-            2 * Random.Shared.Next(_minSize.Y, _maxSize.Y) + 1);
+        MazeElement[,] maze = MazeGeneratorGpt.GenerateMaze(_maxSize.X, _maxSize.Y);
 
-        MazeElement[,] maze = MazeGeneratorGpt.GenerateMaze(_size.X, _size.Y);
-
-        SpawnGrid(_size);
-
-        StringBuilder builder = new StringBuilder();
-
-        /*for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                switch (maze[i, j])
-                {
-                    case MazeElement.Air:
-                        builder.Append(" ");
-                        break;
-                    case MazeElement.Wall:
-                        builder.Append("\u2588");
-                        break;
-                }
-            }
-
-            builder.Append('\n');
-        }
-
-        GD.Print(builder.ToString());*/
+        SpawnGrid(maze);
     }
 
-    public override void _Process(double delta)
+    private void SpawnGrid(MazeElement[,] maze)
     {
-    }
+        Vector2I pointer = Vector2I.Zero;
 
-    private void SpawnGrid(Vector2I size)
-    {
-        Vector2I offset = Vector2I.Zero;
-
-        for (int column = 0; column < size.X; column++)
+        for (int row = 0; row < maze.GetLength(0); row++)
         {
-            for (int row = 0; row < size.Y; row++)
+            for (int column = 0; column < maze.GetLength(1); column++)
             {
-                PackedScene scene;
-                bool isHorizontal = row % 2 == 0;
-
-                if (column % 2 == 0 && row % 2 == 0)
+                if (maze[row, column] == MazeElement.Wall)
                 {
-                    scene = _wallSquareScene;
-                }
-                else if (column > 0 && row > 0 && column < size.X - 1 && row < size.Y - 1)
-                {
-                    continue;
+                    if (row % 2 == 0)
+                    {
+                        if (column % 2 == 0)
+                        {
+                            WallView wallInstance = _wallSquareScene.Instantiate<WallView>();
+                            wallInstance.Position = pointer;
+                            pointer.X += 8;
+                            GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
+                        }
+                        else
+                        {
+                            WallView wallInstance = _wallHorizontalScene.Instantiate<WallView>();
+                            wallInstance.Position = pointer;
+                            pointer.X += 40;
+                            GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
+                        }
+                    }
+                    else
+                    {
+                        if (column % 2 == 0)
+                        {
+                            WallView wallInstance = _wallVerticalScene.Instantiate<WallView>();
+                            wallInstance.Position = pointer;
+                            pointer.X += 8;
+                            GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
+                        }
+                    }
                 }
                 else
                 {
-                    scene = _wallHorizontalScene;
+                    if (column % 2 == 0)
+                    {
+                        pointer.X += 8;
+                    }
+                    else
+                    {
+                        pointer.X += 40;
+                    }
                 }
+            }
 
-                WallView wallInstance = scene.Instantiate<WallView>();
+            pointer.X = 0;
 
-                wallInstance.Position = new Vector2(isHorizontal ? offset.X - wallInstance.size.X * 1.5f : 0,
-                    !isHorizontal ? offset.Y - wallInstance.size.Y * 1.5f : 0);
-                offset += wallInstance.size;
-                GetParent().CallDeferred("add_child", wallInstance);
+            if (row % 2 == 0)
+            {
+                pointer.Y += 8;
+            }
+            else
+            {
+                pointer.Y += 40;
             }
         }
     }

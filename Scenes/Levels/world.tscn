@@ -3,28 +3,29 @@
 [ext_resource type="PackedScene" uid="uid://badbifaatyebj" path="res://Scenes/Prefabs/tank_view.tscn" id="1_s31x8"]
 [ext_resource type="Script" path="res://Scenes/Levels/input.gd" id="2_4jarb"]
 [ext_resource type="Script" path="res://Scripts/MazeGenerator.cs" id="3_4hc82"]
-[ext_resource type="PackedScene" uid="uid://dokfbtlna77li" path="res://Scenes/Prefabs/wall_view_vertical.tscn" id="5_ajgko"]
-[ext_resource type="PackedScene" uid="uid://dg0bld6xd2cgo" path="res://Scenes/Prefabs/square_wall_view.tscn" id="5_ccw7j"]
-[ext_resource type="PackedScene" uid="uid://b4vpsb7t1vknq" path="res://Scenes/Prefabs/wall_view_horizontal.tscn" id="6_igskw"]
+[ext_resource type="PackedScene" uid="uid://dg0bld6xd2cgo" path="res://Scenes/Prefabs/Walls/square_wall_view.tscn" id="4_dop3b"]
+[ext_resource type="PackedScene" uid="uid://dokfbtlna77li" path="res://Scenes/Prefabs/Walls/wall_view_vertical.tscn" id="5_kow6j"]
+[ext_resource type="PackedScene" uid="uid://b4vpsb7t1vknq" path="res://Scenes/Prefabs/Walls/wall_view_horizontal.tscn" id="6_rpd44"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.73, 1.73)
-
 [node name="Tank" parent="." instance=ExtResource("1_s31x8")]
+position = Vector2(26, 26)
+move_speed = 50.0
+
+[node name="Camera2D" type="Camera2D" parent="Tank"]
+zoom = Vector2(1.46, 1.46)
 
 [node name="input" type="Node" parent="."]
 script = ExtResource("2_4jarb")
 
 [node name="TestWalls" type="Node2D" parent="."]
-position = Vector2(97, -5)
 script = ExtResource("3_4hc82")
-_wallSquareScene = ExtResource("5_ccw7j")
-_wallVerticalScene = ExtResource("5_ajgko")
-_wallHorizontalScene = ExtResource("6_igskw")
+_wallSquareScene = ExtResource("4_dop3b")
+_wallVerticalScene = ExtResource("5_kow6j")
+_wallHorizontalScene = ExtResource("6_rpd44")
 _minSize = Vector2i(10, 10)
-_maxSize = Vector2i(40, 40)
+_maxSize = Vector2i(41, 41)
 
 [connection signal="move_input_changed" from="input" to="Tank" method="_on_input_move_input_changed"]
 [connection signal="shoot_input_triggered" from="input" to="Tank" method="_on_input_shoot_input_triggered"]
