@@ -1,3 +1,4 @@
+using System;
 using AXTanks.Scripts.Extensions;
 using Godot;
 
@@ -5,18 +6,33 @@ namespace AXTanks.Scripts;
 
 public partial class MazeGenerator : Node2D
 {
+    public Vector2I size { get; private set; }
+    
+    [Export] private Vector2I _halfMinSize;
+    [Export] private Vector2I _halfMaxSize;
     [Export] private PackedScene _wallSquareScene;
     [Export] private PackedScene _wallVerticalScene;
     [Export] private PackedScene _wallHorizontalScene;
 
-    [Export] private Vector2I _minSize;
-    [Export] private Vector2I _maxSize;
+    private int _seed;
+    private Random _random;
+    private MazeGeneratorModel _mazeGeneratorModel;
 
-    private Vector2I _size;
-
-    public override void _Ready()
+    public void Initialize()
     {
-        MazeElement[,] maze = MazeGeneratorGpt.GenerateMaze(_maxSize.X, _maxSize.Y);
+        _seed = Random.Shared.Next(int.MaxValue);
+        _random = new Random(_seed);
+        _mazeGeneratorModel = new MazeGeneratorModel(_random);
+    }
+
+    public void Generate()
+    {
+        int sizeX = 2 * _random.Next(_halfMinSize.X, _halfMaxSize.X) + 1;
+        int sizeY = 2 * _random.Next(_halfMinSize.Y, _halfMaxSize.Y) + 1;
+
+        size = new Vector2I(sizeX, sizeY);
+
+        MazeElement[,] maze = _mazeGeneratorModel.GenerateMaze(sizeX, sizeY);
 
         SpawnGrid(maze);
     }

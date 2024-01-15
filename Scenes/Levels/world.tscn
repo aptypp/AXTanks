@@ -1,31 +1,34 @@
 [gd_scene load_steps=7 format=3 uid="uid://ckvvt7175eeg1"]
 
-[ext_resource type="PackedScene" uid="uid://badbifaatyebj" path="res://Scenes/Prefabs/tank_view.tscn" id="1_s31x8"]
-[ext_resource type="Script" path="res://Scenes/Levels/input.gd" id="2_4jarb"]
+[ext_resource type="Script" path="res://Scripts/GameInitializer.cs" id="1_cxh4a"]
 [ext_resource type="Script" path="res://Scripts/MazeGenerator.cs" id="3_4hc82"]
 [ext_resource type="PackedScene" uid="uid://dg0bld6xd2cgo" path="res://Scenes/Prefabs/Walls/square_wall_view.tscn" id="4_dop3b"]
 [ext_resource type="PackedScene" uid="uid://dokfbtlna77li" path="res://Scenes/Prefabs/Walls/wall_view_vertical.tscn" id="5_kow6j"]
+[ext_resource type="PackedScene" uid="uid://badbifaatyebj" path="res://Scenes/Prefabs/tank_view.tscn" id="6_lr06a"]
 [ext_resource type="PackedScene" uid="uid://b4vpsb7t1vknq" path="res://Scenes/Prefabs/Walls/wall_view_horizontal.tscn" id="6_rpd44"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Tank" parent="." instance=ExtResource("1_s31x8")]
-position = Vector2(26, 26)
-move_speed = 50.0
+[node name="Initializer" type="Node" parent="." node_paths=PackedStringArray("_camera2D", "_mazeGenerator")]
+script = ExtResource("1_cxh4a")
+_camera2D = NodePath("../Camera2D")
+_mazeGenerator = NodePath("../Maze")
 
-[node name="Camera2D" type="Camera2D" parent="Tank"]
-zoom = Vector2(1.46, 1.46)
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(-50, -50)
+anchor_mode = 0
+zoom = Vector2(1.25, 1.25)
 
 [node name="input" type="Node" parent="."]
-script = ExtResource("2_4jarb")
 
-[node name="TestWalls" type="Node2D" parent="."]
+[node name="Maze" type="Node2D" parent="."]
 script = ExtResource("3_4hc82")
+_halfMinSize = Vector2i(5, 5)
+_halfMaxSize = Vector2i(10, 15)
 _wallSquareScene = ExtResource("4_dop3b")
 _wallVerticalScene = ExtResource("5_kow6j")
 _wallHorizontalScene = ExtResource("6_rpd44")
-_minSize = Vector2i(10, 10)
-_maxSize = Vector2i(41, 41)
 
-[connection signal="move_input_changed" from="input" to="Tank" method="_on_input_move_input_changed"]
-[connection signal="shoot_input_triggered" from="input" to="Tank" method="_on_input_shoot_input_triggered"]
+[node name="Players" type="Node2D" parent="."]
+
+[node name="TankView" parent="." instance=ExtResource("6_lr06a")]

@@ -19,6 +19,12 @@ config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 gdscript/warnings/untyped_declaration=2
 gdscript/warnings/inferred_declaration=2
 
+[display]
+
+window/size/viewport_width=1000
+window/size/viewport_height=700
+window/size/resizable=false
+
 [dotnet]
 
 project/assembly_name="AXTanks"

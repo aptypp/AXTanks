@@ -1,9 +1,48 @@
-[gd_scene format=3 uid="uid://dmijeh8wklrdm"]
+[gd_scene load_steps=2 format=3 uid="uid://dmijeh8wklrdm"]
 
-[node name="Ui" type="Control"]
+[ext_resource type="Script" path="res://Scripts/Ui.cs" id="1_xt36h"]
+
+[node name="Ui" type="Control" node_paths=PackedStringArray("_addressInput")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_xt36h")
+_addressInput = NodePath("VBoxContainer/AddressInput")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+offset_right = 564.0
+offset_bottom = 272.0
+
+[node name="HostButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="ConnectButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Connect"
+
+[node name="AddressInput" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "Address"
+
+[node name="NicknameInput" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Nickname"
+
+[node name="ColorPicker" type="ColorPicker" parent="VBoxContainer"]
+layout_mode = 2
+edit_alpha = false
+sampler_visible = false
+color_modes_visible = false
+sliders_visible = false
+hex_visible = false
+presets_visible = false
+
+[connection signal="pressed" from="VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ConnectButton" to="." method="_on_connect_button_pressed"]

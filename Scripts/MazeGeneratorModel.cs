@@ -4,9 +4,17 @@ using Godot;
 
 namespace AXTanks.Scripts;
 
-internal class MazeGeneratorGpt
+internal class MazeGeneratorModel
 {
-    public static MazeElement[,] GenerateMaze(int rows, int cols)
+    private Random _random;
+
+    public MazeGeneratorModel(Random random)
+    {
+        _random = random;
+    }
+    
+    
+    public MazeElement[,] GenerateMaze(int rows, int cols)
     {
         MazeElement[,] maze = new MazeElement[rows, cols];
         for (int i = 0; i < rows; i++)
@@ -26,15 +34,16 @@ internal class MazeGeneratorGpt
         return maze;
     }
 
-    private static void MakeHoles(MazeElement[,] maze)
+    private void MakeHoles(MazeElement[,] maze)
     {
+
         for (int row = 1; row < maze.GetLength(0) - 1; row++)
         {
             for (int column = 1; column < maze.GetLength(1) - 1; column++)
             {
                 if (column % 2 == 0 && column % 2 == 0) continue;
 
-                bool isNeedRemove = Random.Shared.Next(100) < 20;
+                bool isNeedRemove = _random.Next(100) < 20;
 
                 if (!isNeedRemove) continue;
 
@@ -43,7 +52,7 @@ internal class MazeGeneratorGpt
         }
     }
 
-    private static void RemoveLonelySquares(MazeElement[,] maze)
+    private void RemoveLonelySquares(MazeElement[,] maze)
     {
         for (int row = 1; row < maze.GetLength(0) - 1; row++)
         {
@@ -52,29 +61,29 @@ internal class MazeGeneratorGpt
                 if (column % 2 != 0 || column % 2 != 0) continue;
 
                 Vector2I currentPosition = new Vector2I(row, column);
-                
-                if(!IsWall(currentPosition, maze)) continue;
-                
+
+                if (!IsWall(currentPosition, maze)) continue;
+
                 Vector2I left = currentPosition + Vector2I.Left;
                 Vector2I right = currentPosition + Vector2I.Right;
                 Vector2I up = currentPosition + Vector2I.Up;
                 Vector2I down = currentPosition + Vector2I.Down;
 
                 if (IsWall(left, maze) || IsWall(right, maze) || IsWall(up, maze) || IsWall(down, maze)) continue;
-                
+
                 maze[row, column] = MazeElement.Air;
             }
         }
     }
 
-    private static bool IsWall(Vector2I position, MazeElement[,] maze)
+    private bool IsWall(Vector2I position, MazeElement[,] maze)
     {
         if (!IsInsideMaze(position.X, position.Y, maze.GetLength(0), maze.GetLength(1))) return false;
 
         return maze[position.X, position.Y] == MazeElement.Wall;
     }
 
-    private static void Dfs(MazeElement[,] maze, Tuple<int, int> currentCell)
+    private void Dfs(MazeElement[,] maze, Tuple<int, int> currentCell)
     {
         int row = currentCell.Item1;
         int col = currentCell.Item2;
@@ -99,18 +108,17 @@ internal class MazeGeneratorGpt
         }
     }
 
-    private static void Shuffle(IList<int> array)
+    private void Shuffle(IList<int> array)
     {
-        Random random = new Random();
         int n = array.Count;
         for (int i = n - 1; i > 0; i--)
         {
-            int j = random.Next(0, i + 1);
+            int j = _random.Next(0, i + 1);
             (array[i], array[j]) = (array[j], array[i]);
         }
     }
 
-    private static bool IsInsideMaze(int row, int col, int numRows, int numCols)
+    private bool IsInsideMaze(int row, int col, int numRows, int numCols)
     {
         return row >= 0 && row < numRows && col >= 0 && col < numCols;
     }
