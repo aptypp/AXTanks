@@ -1,28 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://ckvvt7175eeg1"]
+[gd_scene load_steps=6 format=3 uid="uid://ckvvt7175eeg1"]
 
-[ext_resource type="Script" path="res://Scripts/GameInitializer.cs" id="1_cxh4a"]
-[ext_resource type="Script" path="res://Scripts/MazeGenerator.cs" id="3_4hc82"]
+[ext_resource type="Script" path="res://Scripts/Scenes/WorldScene.cs" id="1_deu80"]
+[ext_resource type="Script" path="res://Scripts/Maze/MazeGenerator.cs" id="3_010fg"]
 [ext_resource type="PackedScene" uid="uid://dg0bld6xd2cgo" path="res://Scenes/Prefabs/Walls/square_wall_view.tscn" id="4_dop3b"]
 [ext_resource type="PackedScene" uid="uid://dokfbtlna77li" path="res://Scenes/Prefabs/Walls/wall_view_vertical.tscn" id="5_kow6j"]
-[ext_resource type="PackedScene" uid="uid://badbifaatyebj" path="res://Scenes/Prefabs/tank_view.tscn" id="6_lr06a"]
 [ext_resource type="PackedScene" uid="uid://b4vpsb7t1vknq" path="res://Scenes/Prefabs/Walls/wall_view_horizontal.tscn" id="6_rpd44"]
 
-[node name="Node2D" type="Node2D"]
-
-[node name="Initializer" type="Node" parent="." node_paths=PackedStringArray("_camera2D", "_mazeGenerator")]
-script = ExtResource("1_cxh4a")
-_camera2D = NodePath("../Camera2D")
-_mazeGenerator = NodePath("../Maze")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2(-50, -50)
-anchor_mode = 0
-zoom = Vector2(1.25, 1.25)
-
-[node name="input" type="Node" parent="."]
+[node name="World" type="Node2D" node_paths=PackedStringArray("_mazeGenerator")]
+script = ExtResource("1_deu80")
+_mazeGenerator = NodePath("Maze")
 
 [node name="Maze" type="Node2D" parent="."]
-script = ExtResource("3_4hc82")
+script = ExtResource("3_010fg")
 _halfMinSize = Vector2i(5, 5)
 _halfMaxSize = Vector2i(10, 15)
 _wallSquareScene = ExtResource("4_dop3b")
@@ -30,5 +19,3 @@ _wallVerticalScene = ExtResource("5_kow6j")
 _wallHorizontalScene = ExtResource("6_rpd44")
 
 [node name="Players" type="Node2D" parent="."]
-
-[node name="TankView" parent="." instance=ExtResource("6_lr06a")]

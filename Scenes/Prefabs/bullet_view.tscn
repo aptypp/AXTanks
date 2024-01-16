@@ -1,14 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://735vkdyycs08"]
+[gd_scene load_steps=6 format=3 uid="uid://735vkdyycs08"]
 
 [ext_resource type="Texture2D" uid="uid://dmyaaw23a156q" path="res://Textures/bullet.png" id="1_nckqv"]
-[ext_resource type="Script" path="res://Scripts/BulletView.cs" id="1_r4f2k"]
+[ext_resource type="Script" path="res://Scripts/Player/BulletView.cs" id="1_pteaf"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7ti5m"]
 friction = 0.0
 bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xfcvy"]
-radius = 2.5
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ka13n"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [node name="bullet_view" type="RigidBody2D"]
 collision_layer = 2
@@ -18,13 +22,13 @@ gravity_scale = 0.0
 lock_rotation = true
 linear_damp_mode = 1
 angular_damp_mode = 1
-script = ExtResource("1_r4f2k")
-_speed = 150.0
+script = ExtResource("1_pteaf")
+_speed = 600.0
 
 [node name="view" type="Sprite2D" parent="."]
 modulate = Color(0, 0, 0, 1)
 texture_filter = 1
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("1_nckqv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -40,6 +44,9 @@ shape = SubResource("CircleShape2D_xfcvy")
 wait_time = 5.0
 one_shot = true
 autostart = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ka13n")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

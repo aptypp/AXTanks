@@ -1,23 +1,28 @@
-[gd_scene load_steps=7 format=3 uid="uid://badbifaatyebj"]
+[gd_scene load_steps=6 format=3 uid="uid://badbifaatyebj"]
 
+[ext_resource type="Script" path="res://Scripts/Player/TankView.cs" id="1_fo1e1"]
 [ext_resource type="Texture2D" uid="uid://7iixdxw8c56d" path="res://Textures/tank.png" id="1_gn35i"]
-[ext_resource type="Script" path="res://Scripts/TankView.cs" id="1_qx8t7"]
 [ext_resource type="PackedScene" uid="uid://735vkdyycs08" path="res://Scenes/Prefabs/bullet_view.tscn" id="2_fmki4"]
-[ext_resource type="Script" path="res://Scripts/PlayerInput.cs" id="4_h4lix"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_boovj"]
-friction = 0.15
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bcwuf"]
-height = 32.0
+radius = 40.0
+height = 120.0
 
-[node name="TankView" type="RigidBody2D" node_paths=PackedStringArray("_bulletPosition")]
-collision_layer = 5
-physics_material_override = SubResource("PhysicsMaterial_boovj")
-gravity_scale = 0.0
-continuous_cd = 2
-script = ExtResource("1_qx8t7")
-_moveSpeed = 5000.0
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oe82q"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:_id")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[node name="TankView" type="CharacterBody2D" node_paths=PackedStringArray("_bulletPosition")]
+collision_layer = 2
+script = ExtResource("1_fo1e1")
+_moveSpeed = 20000.0
 _rotationSpeed = 150.0
 _bulletPosition = NodePath("BulletPosition")
 _bulletScene = ExtResource("2_fmki4")
@@ -25,15 +30,15 @@ _bulletScene = ExtResource("2_fmki4")
 [node name="View" type="Sprite2D" parent="."]
 modulate = Color(0.352941, 0.8, 0.52549, 1)
 texture_filter = 1
+scale = Vector2(4, 4)
 texture = ExtResource("1_gn35i")
-script = ExtResource("4_h4lix")
 
 [node name="BulletPosition" type="Node2D" parent="."]
-position = Vector2(0, -20)
+position = Vector2(0, -80)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_bcwuf")
 
-[connection signal="MoveInputChanged" from="View" to="." method="_on_view_move_input_changed"]
-[connection signal="ShootInputTriggered" from="View" to="." method="_on_view_shoot_input_triggered"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_oe82q")

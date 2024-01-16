@@ -1,7 +1,6 @@
-using System;
 using Godot;
 
-namespace AXTanks.Scripts;
+namespace AXTanks.Scripts.Player;
 
 public partial class PlayerInput : Node
 {
@@ -9,7 +8,7 @@ public partial class PlayerInput : Node
     public delegate void ShootInputTriggeredEventHandler();
 
     [Signal]
-    public delegate Vector2 MoveInputChangedEventHandler();
+    public delegate void MoveInputChangedEventHandler(Vector2 input);
 
     private Vector2 _moveInput;
 

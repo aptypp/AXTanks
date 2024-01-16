@@ -5,6 +5,11 @@ namespace AXTanks.Scripts.Extensions;
 
 public static class NodeExtension
 {
+    public static Error RpcServerOnly(this Node node, StringName methodName, params Variant[] args)
+    {
+        return node.RpcId(1, methodName, args);
+    }
+
     public static Variant CallDeferredExt(this Node node, string nameOfMethod, params Variant[] args)
     {
         return node.CallDeferred(ConvertToSnakeCase(nameOfMethod[(nameOfMethod.LastIndexOf(':') + 1)..]), args);

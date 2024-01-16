@@ -21,9 +21,10 @@ gdscript/warnings/inferred_declaration=2
 
 [display]
 
-window/size/viewport_width=1000
-window/size/viewport_height=700
-window/size/resizable=false
+window/size/viewport_width=3840
+window/size/viewport_height=2160
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -36,6 +37,10 @@ folder_colors={
 "res://Scripts/": "red",
 "res://Textures/": "yellow"
 }
+
+[gui]
+
+theme/custom="res://Themes/theme.tres"
 
 [input]
 

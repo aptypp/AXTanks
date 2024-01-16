@@ -1,12 +1,14 @@
 using Godot;
 
+namespace AXTanks.Scripts.Gui;
+
 public partial class Ui : Control
 {
     [Export] private Node2D _world;
     [Export] private LineEdit _addressInput;
     [Export] private PackedScene _worldScene;
     [Export] private PackedScene _tankScene;
-    
+
     private const int _PORT = 12034;
 
     public override void _Ready()
@@ -17,7 +19,6 @@ public partial class Ui : Control
 
     private void MultiplayerOnConnectedToServer()
     {
-        
     }
 
     private void MultiplayerOnPeerConnected(long id)
@@ -25,7 +26,7 @@ public partial class Ui : Control
         if (!Multiplayer.IsServer()) return;
 
         //Node tankInstance = _tankScene.Instantiate<TankView>();
-        
+
         //GetParent().AddChild(tankInstance);
     }
 

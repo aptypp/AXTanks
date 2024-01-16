@@ -2,12 +2,12 @@ using System;
 using AXTanks.Scripts.Extensions;
 using Godot;
 
-namespace AXTanks.Scripts;
+namespace AXTanks.Scripts.Maze;
 
 public partial class MazeGenerator : Node2D
 {
     public Vector2I size { get; private set; }
-    
+
     [Export] private Vector2I _halfMinSize;
     [Export] private Vector2I _halfMaxSize;
     [Export] private PackedScene _wallSquareScene;
@@ -18,9 +18,9 @@ public partial class MazeGenerator : Node2D
     private Random _random;
     private MazeGeneratorModel _mazeGeneratorModel;
 
-    public void Initialize()
+    public void Initialize(int seed)
     {
-        _seed = Random.Shared.Next(int.MaxValue);
+        _seed = seed;
         _random = new Random(_seed);
         _mazeGeneratorModel = new MazeGeneratorModel(_random);
     }
@@ -53,14 +53,14 @@ public partial class MazeGenerator : Node2D
                         {
                             WallView wallInstance = _wallSquareScene.Instantiate<WallView>();
                             wallInstance.Position = pointer;
-                            pointer.X += 8;
+                            pointer.X += 32;
                             GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
                         }
                         else
                         {
                             WallView wallInstance = _wallHorizontalScene.Instantiate<WallView>();
                             wallInstance.Position = pointer;
-                            pointer.X += 40;
+                            pointer.X += 160;
                             GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
                         }
                     }
@@ -70,7 +70,7 @@ public partial class MazeGenerator : Node2D
                         {
                             WallView wallInstance = _wallVerticalScene.Instantiate<WallView>();
                             wallInstance.Position = pointer;
-                            pointer.X += 8;
+                            pointer.X += 32;
                             GetParent().CallDeferredExt(nameof(AddChild), wallInstance);
                         }
                     }
@@ -79,11 +79,11 @@ public partial class MazeGenerator : Node2D
                 {
                     if (column % 2 == 0)
                     {
-                        pointer.X += 8;
+                        pointer.X += 32;
                     }
                     else
                     {
-                        pointer.X += 40;
+                        pointer.X += 160;
                     }
                 }
             }
@@ -92,11 +92,11 @@ public partial class MazeGenerator : Node2D
 
             if (row % 2 == 0)
             {
-                pointer.Y += 8;
+                pointer.Y += 32;
             }
             else
             {
-                pointer.Y += 40;
+                pointer.Y += 160;
             }
         }
     }

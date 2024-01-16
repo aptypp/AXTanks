@@ -1,6 +1,6 @@
 using Godot;
 
-namespace AXTanks.Scripts;
+namespace AXTanks.Scripts.Maze;
 
 public partial class WallView : StaticBody2D
 {

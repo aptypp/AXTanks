@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace AXTanks.Scripts;
+namespace AXTanks.Scripts.Maze;
 
 internal class MazeGeneratorModel
 {

@@ -1,4 +1,4 @@
-namespace AXTanks.Scripts;
+namespace AXTanks.Scripts.Maze;
 
 public enum MazeElement : byte
 {
