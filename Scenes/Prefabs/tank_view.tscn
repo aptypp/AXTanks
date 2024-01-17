@@ -5,8 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://735vkdyycs08" path="res://Scenes/Prefabs/bullet_view.tscn" id="2_fmki4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bcwuf"]
-radius = 40.0
-height = 120.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oe82q"]
 properties/0/path = NodePath(".:position")
@@ -21,20 +19,20 @@ properties/2/replication_mode = 2
 
 [node name="TankView" type="CharacterBody2D" node_paths=PackedStringArray("_bulletPosition")]
 collision_layer = 2
+collision_mask = 8
 script = ExtResource("1_fo1e1")
-_moveSpeed = 20000.0
+_moveSpeed = 5000.0
 _rotationSpeed = 150.0
 _bulletPosition = NodePath("BulletPosition")
 _bulletScene = ExtResource("2_fmki4")
 
 [node name="View" type="Sprite2D" parent="."]
-modulate = Color(0.352941, 0.8, 0.52549, 1)
+modulate = Color(0.141176, 0.701961, 0.345098, 1)
 texture_filter = 1
-scale = Vector2(4, 4)
 texture = ExtResource("1_gn35i")
 
 [node name="BulletPosition" type="Node2D" parent="."]
-position = Vector2(0, -80)
+position = Vector2(0, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)

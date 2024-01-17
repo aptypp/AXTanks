@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://d53i0wiolavj"]
+
+[ext_resource type="Script" path="res://Scripts/Gui/HuePicker.cs" id="1_0k8xw"]
+
+[node name="HuePicker" type="Control" node_paths=PackedStringArray("_slider", "_colorRect")]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 50.0
+script = ExtResource("1_0k8xw")
+_baseColor = Color(0.8, 0.160784, 0.172549, 1)
+_slider = NodePath("HSlider")
+_colorRect = NodePath("ColorRect")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -25.0
+offset_right = 50.0
+offset_bottom = 25.0
+grow_vertical = 2
+color = Color(0.901961, 0.270588, 0.270588, 1)
+
+[node name="HSlider" type="HSlider" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+step = 0.01
+scrollable = false

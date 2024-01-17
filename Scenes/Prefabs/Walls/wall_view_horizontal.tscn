@@ -4,21 +4,23 @@
 [ext_resource type="Texture2D" uid="uid://bqo8m5vpeg2mn" path="res://Textures/square_wall.png" id="2_alnsb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ghe41"]
-size = Vector2(160, 32)
+size = Vector2(40, 8)
 
 [node name="wall_view" type="StaticBody2D"]
+collision_layer = 8
+collision_mask = 0
 script = ExtResource("1_ohtd1")
 size = Vector2i(32, 8)
 
 [node name="view" type="Sprite2D" parent="."]
 modulate = Color(0.772549, 0.772549, 0.772549, 1)
 texture_filter = 1
-position = Vector2(80, 16)
+position = Vector2(20, 4)
 rotation = 1.5708
-scale = Vector2(4, 20)
+scale = Vector2(1, 5)
 texture = ExtResource("2_alnsb")
 region_rect = Rect2(12, 0, 8, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(80, 16)
+position = Vector2(20, 4)
 shape = SubResource("RectangleShape2D_ghe41")

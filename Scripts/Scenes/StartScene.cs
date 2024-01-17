@@ -23,7 +23,7 @@ public partial class StartScene : Node
     private void StartGame()
     {
         if (!Multiplayer.IsServer()) return;
-        
+
         int seed = Random.Shared.Next(int.MaxValue);
         _worldScene.Rpc(nameof(_worldScene.GenerateMaze), seed);
 
@@ -47,7 +47,6 @@ public partial class StartScene : Node
         _worldScene.AddChild(tankView, true);
 
         tankView.Rpc(nameof(tankView.Initialize), peerId);
-        tankView.Position = new Vector2(500, -500);
     }
 
     [Rpc]
@@ -75,6 +74,13 @@ public partial class StartScene : Node
 
     private void ClientReady()
     {
+        _uiScene.GetConnectedClientData();
+        _uiScene.AddClientData();
+        _uiScene.UpdateClientData();
+
+        _uiScene.nicknameInput.TextChanged += _ => _uiScene.UpdateClientData();
+        _uiScene.huePicker.ColorChanged += _ => _uiScene.UpdateClientData();
+        _uiScene.readyCheckBox.Toggled += _ => _uiScene.UpdateClientData();
     }
 
     private void Connect()
@@ -84,7 +90,8 @@ public partial class StartScene : Node
         peer.CreateClient(_uiScene.addressInput.Text, _PORT);
 
         Multiplayer.MultiplayerPeer = peer;
-        ClientReady();
+
+        Multiplayer.ConnectedToServer += ClientReady;
     }
 
     private void Host()

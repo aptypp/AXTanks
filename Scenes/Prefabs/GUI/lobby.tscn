@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://qp7majsgqgje"]
+
+[ext_resource type="Script" path="res://Scripts/Gui/LobbyView.cs" id="1_u7nx8"]
+[ext_resource type="PackedScene" uid="uid://dg6pa1dtwwcx1" path="res://Scenes/Prefabs/GUI/player_info.tscn" id="2_4uwdu"]
+
+[node name="Lobby" type="MarginContainer" node_paths=PackedStringArray("_infoContainer")]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -250.0
+offset_right = -9.99927
+offset_bottom = 250.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_u7nx8")
+_playerInfoViewScene = ExtResource("2_4uwdu")
+_infoContainer = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2

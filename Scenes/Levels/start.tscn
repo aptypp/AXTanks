@@ -19,14 +19,17 @@ _spawnable_scenes = PackedStringArray("res://Scenes/Prefabs/tank_view.tscn", "re
 spawn_path = NodePath("../World")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-637, -409)
 anchor_mode = 0
 
 [node name="World" parent="." instance=ExtResource("3_qy0gq")]
 
-[node name="Ui" parent="." instance=ExtResource("2_id865")]
-size_flags_horizontal = 1
-size_flags_vertical = 1
-
 [node name="Input" type="Node" parent="."]
 script = ExtResource("4_q71wn")
+
+[node name="Ui" parent="." instance=ExtResource("2_id865")]
+offset_left = -19.0
+offset_top = 68.0
+offset_right = -19.0
+offset_bottom = 68.0
+size_flags_horizontal = 1
+size_flags_vertical = 1
