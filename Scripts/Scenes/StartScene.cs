@@ -37,6 +37,7 @@ public partial class StartScene : Node
     public void RemoveBullet(BulletView bulletView)
     {
         _bulletViews.Remove(bulletView);
+        _gameMode.AddClientBullet(bulletView.linkedPlayerId);
 
         bulletView.Rpc(nameof(bulletView.Destroy));
     }
@@ -84,13 +85,15 @@ public partial class StartScene : Node
         _uiScene.HideAllMenus();
     }
 
-    private void RestartGame()
+    private void RestartGame(GameClientData winnerData)
     {
-        AddScore();
+        if (winnerData.id != -1) AddScore(winnerData);
 
         _worldScene.Rpc(nameof(_worldScene.ClearMaze));
         _worldScene.Rpc(nameof(_worldScene.GenerateMaze));
         RemoveAllBullets();
+
+        _gameMode.ResetGame();
 
         foreach (KeyValuePair<int, TankView> tankView in _tankViews)
         {
@@ -98,11 +101,9 @@ public partial class StartScene : Node
         }
     }
 
-    private void AddScore()
+    private void AddScore(GameClientData winnerData)
     {
-        GameClientData gameClientData = _gameMode.GetWinner();
-
-        _uiScene.scorePanel.RequestUpdateView(gameClientData.id, gameClientData.score);
+        _uiScene.scorePanel.RequestUpdateView(winnerData.id, winnerData.score);
     }
 
     private Vector2 GetRandomPositionInMaze()
@@ -120,9 +121,19 @@ public partial class StartScene : Node
         foreach (KeyValuePair<int, LobbyClientData> clientData in clientDatas)
         {
             TankView tankView = _tankViewScene.Instantiate<TankView>();
-            tankView.Initialize(Multiplayer.GetUniqueId() == clientData.Value.id, clientData.Value.color,
-                () => OnClientDead(clientData.Value.id), AddBullet, RemoveBullet);
+
+            TankViewCallbacks callbacks = new();
+
+            callbacks.onDead = () => OnClientDead(clientData.Value.id);
+            callbacks.canShoot = () => _gameMode.CanClientShoot(clientData.Value.id);
+            callbacks.addBullet = AddBullet;
+            callbacks.removeBullet = RemoveBullet;
+            callbacks.decreaseBullet = _gameMode.DecreaseClientBullet;
+
+            tankView.Initialize(Multiplayer.GetUniqueId() == clientData.Value.id, clientData.Value.color, callbacks);
+
             if (Multiplayer.IsServer()) tankView.SubscribeHitBox();
+
             tankView.SetMultiplayerAuthority(clientData.Value.id);
 
             _tankViews.Add(clientData.Value.id, tankView);

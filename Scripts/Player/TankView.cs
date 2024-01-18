@@ -14,19 +14,15 @@ public partial class TankView : CharacterBody2D
     [Export] private PackedScene _bulletScene;
 
     private Vector2 _moveDirection;
-    private Action _onDead;
-    private Action<BulletView> _addBullet;
-    private Action<BulletView> _removeBullet;
+    private TankViewCallbacks _callbacks;
+
     private bool _isLocalPlayer;
 
-    public void Initialize(bool isLocalPlayer, Color color, Action onDead, Action<BulletView> addBullet,
-        Action<BulletView> removeBullet)
+    public void Initialize(bool isLocalPlayer, Color color, TankViewCallbacks callbacks)
     {
         _isLocalPlayer = isLocalPlayer;
         _view.Modulate = color;
-        _onDead = onDead;
-        _removeBullet = removeBullet;
-        _addBullet = addBullet;
+        _callbacks = callbacks;
     }
 
     public void SubscribeHitBox() => _hitBox.BodyEntered += OnHitBoxBodyEntered;
@@ -46,7 +42,7 @@ public partial class TankView : CharacterBody2D
     {
         if (ProcessMode == ProcessModeEnum.Disabled) return;
 
-        this.RpcServerOnly(nameof(RequestSpawnBullet));
+        this.RpcServerOnly(nameof(RequestSpawnBullet), Multiplayer.GetUniqueId(), _view.Modulate);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -54,7 +50,7 @@ public partial class TankView : CharacterBody2D
     {
         ProcessMode = ProcessModeEnum.Disabled;
         Hide();
-        _onDead();
+        _callbacks.onDead();
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -67,40 +63,50 @@ public partial class TankView : CharacterBody2D
     }
 
     [Rpc]
-    private void RequestSpawnBullet()
+    private void RequestSpawnBullet(int id, Color color)
     {
-        BulletView bulletView = CreateBullet();
+        if (!_callbacks.canShoot()) return;
 
-        _addBullet(bulletView);
-        bulletView.Initialize(_removeBullet);
+        BulletView bulletView = CreateBullet(color);
+
+        _callbacks.addBullet(bulletView);
+        _callbacks.decreaseBullet(id);
+        bulletView.Initialize(_callbacks.removeBullet, id);
         bulletView.StartTimer();
 
-        Rpc(nameof(ResponseSpawnBullet));
+        Rpc(nameof(ResponseSpawnBullet), color);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    private void ResponseSpawnBullet()
+    private void ResponseSpawnBullet(Color color)
     {
-        CreateBullet();
+        CreateBullet(color);
     }
 
     private void OnHitBoxBodyEntered(Node2D body)
     {
         if (body is not BulletView bulletView) return;
 
-        Rpc(nameof(Die));
-        _removeBullet(bulletView);
+        CallDeferred(nameof(TankHit), bulletView);
     }
 
-    private BulletView CreateBullet()
+    private void TankHit(BulletView bulletView)
+    {
+        Rpc(nameof(Die));
+        _callbacks.removeBullet(bulletView);
+    }
+
+    private BulletView CreateBullet(Color color)
     {
         BulletView bulletInstance = _bulletScene.Instantiate<BulletView>();
-        
+
+        bulletInstance.SetColor(color);
+
         bulletInstance.Position = _bulletPosition.GlobalPosition;
         bulletInstance.Rotation = Rotation;
 
         GetParent().AddChild(bulletInstance, true);
-        
+
         bulletInstance.SetMultiplayerAuthority(1);
 
         return bulletInstance;

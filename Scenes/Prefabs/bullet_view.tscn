@@ -11,14 +11,11 @@ bounce = 1.0
 radius = 2.5
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ka13n"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:linear_velocity")
 properties/0/spawn = true
-properties/0/replication_mode = 0
-properties/1/path = NodePath(".:linear_velocity")
-properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/0/replication_mode = 1
 
-[node name="bullet_view" type="RigidBody2D" node_paths=PackedStringArray("_timer")]
+[node name="bullet_view" type="RigidBody2D" node_paths=PackedStringArray("_timer", "_view")]
 collision_layer = 4
 collision_mask = 8
 physics_material_override = SubResource("PhysicsMaterial_7ti5m")
@@ -30,9 +27,9 @@ angular_damp_mode = 1
 script = ExtResource("1_pteaf")
 _speed = 150.0
 _timer = NodePath("Timer")
+_view = NodePath("view")
 
 [node name="view" type="Sprite2D" parent="."]
-modulate = Color(0, 0, 0, 1)
 texture_filter = 1
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("1_nckqv")

@@ -60,7 +60,7 @@ custom_minimum_size = Vector2(109.325, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "127.0.0.1"
+text = "192.168.1.108"
 placeholder_text = "Address"
 
 [node name="HostButton" type="Button" parent="ClientServerMenu/VBoxContainer2"]

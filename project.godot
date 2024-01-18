@@ -76,4 +76,7 @@ shoot={
 [physics]
 
 2d/run_on_separate_thread=true
-2d/solver/solver_iterations=32
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.188235, 0.188235, 0.188235, 1)

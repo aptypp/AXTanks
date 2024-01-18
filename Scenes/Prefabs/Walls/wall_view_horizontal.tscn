@@ -13,7 +13,7 @@ script = ExtResource("1_ohtd1")
 size = Vector2i(32, 8)
 
 [node name="view" type="Sprite2D" parent="."]
-modulate = Color(0.772549, 0.772549, 0.772549, 1)
+modulate = Color(0.0901961, 0.0901961, 0.0901961, 1)
 texture_filter = 1
 position = Vector2(30, 4)
 rotation = 1.5708

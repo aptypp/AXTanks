@@ -6,6 +6,7 @@ public struct GameClientData : IEquatable<GameClientData>
 {
     public int id { get; set; }
     public int score { get; set; }
+    public int bulletsCount { get; set; }
     public bool isDead { get; set; }
 
     public bool Equals(GameClientData other) => id == other.id;

@@ -13,7 +13,7 @@ script = ExtResource("1_gk33y")
 size = Vector2i(8, 32)
 
 [node name="view" type="Sprite2D" parent="."]
-modulate = Color(0.772549, 0.772549, 0.772549, 1)
+modulate = Color(0.0901961, 0.0901961, 0.0901961, 1)
 texture_filter = 1
 position = Vector2(4, 30)
 scale = Vector2(1, 7.5)
