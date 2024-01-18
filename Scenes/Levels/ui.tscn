@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://qp7majsgqgje" path="res://Scenes/Prefabs/GUI/lobby.tscn" id="3_qhebw"]
 [ext_resource type="Script" path="res://Scripts/Gui/ScorePanel.cs" id="3_ynpjt"]
 
-[node name="Ui" type="Control" node_paths=PackedStringArray("readyCheckBox", "addressInput", "nicknameInput", "lobbyView", "scorePanel", "huePicker", "menu", "_hostButton", "_connectButton", "_startGameButton")]
+[node name="Ui" type="Control" node_paths=PackedStringArray("readyCheckBox", "addressInput", "nicknameInput", "lobbyView", "scorePanel", "huePicker", "_hostButton", "_connectButton", "_startGameButton", "_clientServerMenu", "_clientMenu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,87 +16,114 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_imy4l")
-readyCheckBox = NodePath("Menu/VBoxContainer/CheckBox")
-addressInput = NodePath("Menu/VBoxContainer/AddressInput")
-nicknameInput = NodePath("Menu/VBoxContainer/NicknameInput")
+readyCheckBox = NodePath("ClientMenu/VBoxContainer/HBoxContainer/CheckBox")
+addressInput = NodePath("ClientServerMenu/VBoxContainer2/HBoxContainer/AddressInput")
+nicknameInput = NodePath("ClientMenu/VBoxContainer/NicknameInput")
 lobbyView = NodePath("Lobby")
 scorePanel = NodePath("Scores")
-huePicker = NodePath("Menu/VBoxContainer/HuePicker")
-menu = NodePath("Menu")
-_hostButton = NodePath("Menu/VBoxContainer/HostButton")
-_connectButton = NodePath("Menu/VBoxContainer/ConnectButton")
-_startGameButton = NodePath("Menu/VBoxContainer/StartGameButton")
+huePicker = NodePath("ClientMenu/VBoxContainer/HuePicker")
+_hostButton = NodePath("ClientServerMenu/VBoxContainer2/HostButton")
+_connectButton = NodePath("ClientServerMenu/VBoxContainer2/HBoxContainer/ConnectButton")
+_startGameButton = NodePath("ClientMenu/VBoxContainer/HBoxContainer/StartGameButton")
+_clientServerMenu = NodePath("ClientServerMenu")
+_clientMenu = NodePath("ClientMenu")
 
-[node name="Menu" type="MarginContainer" parent="."]
+[node name="ClientServerMenu" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -102.0
-offset_top = -181.0
-offset_right = 102.0
-offset_bottom = 181.0
+offset_left = -100.0
+offset_top = -33.0
+offset_right = 100.0
+offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ClientServerMenu"]
 layout_mode = 2
-size_flags_vertical = 4
 
-[node name="HostButton" type="Button" parent="Menu/VBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="ClientServerMenu/VBoxContainer2"]
 layout_mode = 2
-size_flags_vertical = 3
-text = "Host"
 
-[node name="ConnectButton" type="Button" parent="Menu/VBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
+[node name="ConnectButton" type="Button" parent="ClientServerMenu/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(73.56, 0)
 layout_mode = 2
 size_flags_vertical = 3
 text = "Connect"
 
-[node name="StartGameButton" type="Button" parent="Menu/VBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
+[node name="AddressInput" type="LineEdit" parent="ClientServerMenu/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(109.325, 0)
 layout_mode = 2
-size_flags_vertical = 3
-text = "Start Game"
-
-[node name="AddressInput" type="LineEdit" parent="Menu/VBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "127.0.0.1"
 placeholder_text = "Address"
 
-[node name="NicknameInput" type="LineEdit" parent="Menu/VBoxContainer"]
+[node name="HostButton" type="Button" parent="ClientServerMenu/VBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Dedicated Server"
+
+[node name="ClientMenu" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -77.5
+offset_right = 100.0
+offset_bottom = 77.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ClientMenu"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="NicknameInput" type="LineEdit" parent="ClientMenu/VBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 3
 placeholder_text = "Nickname"
 
-[node name="HuePicker" parent="Menu/VBoxContainer" instance=ExtResource("2_d053n")]
+[node name="HBoxContainer" type="HBoxContainer" parent="ClientMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="StartGameButton" type="Button" parent="ClientMenu/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 3
+text = "Start Game"
 
-[node name="CheckBox" type="CheckBox" parent="Menu/VBoxContainer"]
+[node name="CheckBox" type="CheckBox" parent="ClientMenu/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 3
 text = "Is Ready"
 
+[node name="HuePicker" parent="ClientMenu/VBoxContainer" instance=ExtResource("2_d053n")]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="Scores" type="MarginContainer" parent="." node_paths=PackedStringArray("_scoreContainer")]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
-anchors_preset = 6
+anchors_preset = 11
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -214.0
-offset_top = -181.0
+anchor_bottom = 1.0
+offset_left = -210.0
+offset_top = 10.0
 offset_right = -10.0
-offset_bottom = 181.0
+offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("3_ynpjt")
@@ -109,4 +136,10 @@ layout_mode = 2
 [node name="Lobby" parent="." instance=ExtResource("3_qhebw")]
 custom_minimum_size = Vector2(200, 500)
 layout_mode = 1
+anchors_preset = 11
+anchor_top = 0.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 10.0
 offset_right = -10.0
+offset_bottom = -10.0

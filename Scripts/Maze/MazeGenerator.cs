@@ -21,7 +21,7 @@ public partial class MazeGenerator : Node2D
     private MazeGeneratorModel _mazeGeneratorModel;
 
     private const int _SQUARE_SIZE = 8;
-    private const int _RECTANGLE_SIZE = 32;
+    private const int _RECTANGLE_SIZE = 60;
 
     public void Initialize(int seed)
     {

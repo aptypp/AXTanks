@@ -35,7 +35,6 @@ public partial class GameMode : Node
 
     public GameClientData GetWinner() => _gameClientData.First(data => !data.Value.isDead).Value;
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
     public void OnClientDead(int id)
     {
         GameClientData gameClientData = _gameClientData[id];
@@ -55,7 +54,7 @@ public partial class GameMode : Node
         }
     }
 
-    public void ClientAlive(int id)
+    private void ClientAlive(int id)
     {
         GameClientData gameClientData = _gameClientData[id];
         gameClientData.isDead = false;
@@ -63,8 +62,7 @@ public partial class GameMode : Node
         _gameClientData[id] = gameClientData;
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    public void OnClientAddScore(int id)
+    private void OnClientAddScore(int id)
     {
         GameClientData gameClientData = _gameClientData[id];
         gameClientData.score++;

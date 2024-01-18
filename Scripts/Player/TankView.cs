@@ -10,6 +10,7 @@ public partial class TankView : CharacterBody2D
     [Export] private float _rotationSpeed;
     [Export] private Node2D _bulletPosition;
     [Export] private Sprite2D _view;
+    [Export] private TankHitBox _hitBox;
     [Export] private PackedScene _bulletScene;
 
     private Vector2 _moveDirection;
@@ -27,6 +28,8 @@ public partial class TankView : CharacterBody2D
         _removeBullet = removeBullet;
         _addBullet = addBullet;
     }
+
+    public void SubscribeHitBox() => _hitBox.BodyEntered += OnHitBoxBodyEntered;
 
     public override void _PhysicsProcess(double delta)
     {
@@ -70,6 +73,7 @@ public partial class TankView : CharacterBody2D
 
         _addBullet(bulletView);
         bulletView.Initialize(_removeBullet);
+        bulletView.StartTimer();
 
         Rpc(nameof(ResponseSpawnBullet));
     }
@@ -80,9 +84,12 @@ public partial class TankView : CharacterBody2D
         CreateBullet();
     }
 
-    private void OnHitTank(TankView tankView)
+    private void OnHitBoxBodyEntered(Node2D body)
     {
-        tankView.Rpc(nameof(tankView.Die));
+        if (body is not BulletView bulletView) return;
+
+        Rpc(nameof(Die));
+        _removeBullet(bulletView);
     }
 
     private BulletView CreateBullet()
@@ -91,10 +98,9 @@ public partial class TankView : CharacterBody2D
         
         bulletInstance.Position = _bulletPosition.GlobalPosition;
         bulletInstance.Rotation = Rotation;
-        bulletInstance.HitTank += OnHitTank;
 
         GetParent().AddChild(bulletInstance, true);
-
+        
         bulletInstance.SetMultiplayerAuthority(1);
 
         return bulletInstance;

@@ -25,10 +25,6 @@ anchor_mode = 0
 script = ExtResource("4_q71wn")
 
 [node name="Ui" parent="." instance=ExtResource("2_id865")]
-offset_left = -19.0
-offset_top = 68.0
-offset_right = -19.0
-offset_bottom = 68.0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 

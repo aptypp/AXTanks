@@ -14,18 +14,40 @@ public partial class UiScene : Control
     [Export] public LobbyView lobbyView { get; private set; }
     [Export] public ScorePanel scorePanel { get; private set; }
     [Export] public HuePicker huePicker { get; private set; }
-    [Export] public Control menu { get; private set; }
 
 
     [Export] private Button _hostButton;
     [Export] private Button _connectButton;
     [Export] private Button _startGameButton;
+    [Export] private Control _clientServerMenu { get; set; }
+    [Export] private Control _clientMenu { get; set; }
 
     public void Initialize(Action onHostButtonPressed, Action onConnectButtonPressed, Action onStartGameButtonPressed)
     {
         _hostButton.Pressed += onHostButtonPressed;
         _connectButton.Pressed += onConnectButtonPressed;
         _startGameButton.Pressed += onStartGameButtonPressed;
+    }
+
+    public void ShowClientServerMenu()
+    {
+        _clientServerMenu.Show();
+        _clientMenu.Hide();
+        lobbyView.Hide();
+    }
+
+    public void ShowClientMenu()
+    {
+        _clientServerMenu.Hide();
+        _clientMenu.Show();
+        lobbyView.Show();
+    }
+
+    public void HideAllMenus()
+    {
+        _clientServerMenu.Hide();
+        _clientMenu.Hide();
+        lobbyView.Hide();
     }
 
     public void GetConnectedClientData()
@@ -42,7 +64,7 @@ public partial class UiScene : Control
     {
         lobbyView.RpcServerOnly(nameof(lobbyView.RequestUpdateClientData), GetClientData());
     }
-    
+
     private string GetClientData()
     {
         LobbyClientData lobbyClientData = new LobbyClientData();

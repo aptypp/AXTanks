@@ -21,9 +21,9 @@ public partial class ScorePanel : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    public void RequestCreateScoreInfoView(int id, StringName name)
+    public void RequestCreateScoreInfoView(int id, StringName name, Color color)
     {
-        Rpc(nameof(ResponseCreateScoreInfoView), id, name);
+        Rpc(nameof(ResponseCreateScoreInfoView), id, name, color);
     }
 
     [Rpc]
@@ -33,18 +33,18 @@ public partial class ScorePanel : Node
     }
 
     [Rpc]
-    private void ResponseCreateScoreInfoView(int id, StringName name)
+    private void ResponseCreateScoreInfoView(int id, StringName name, Color color)
     {
-        CreateScoreInfoView(id, name);
+        CreateScoreInfoView(id, name, color);
     }
 
-    private void CreateScoreInfoView(int id, string name)
+    private void CreateScoreInfoView(int id, string name, Color color)
     {
         ScoreInfoView instance = _scoreInfoViewScene.Instantiate<ScoreInfoView>();
 
         _scoreContainer.AddChild(instance, true);
 
-        instance.Initialize(name);
+        instance.Initialize(name, color);
         instance.SetScore(0);
 
         _scoreInfoViews.Add(id, instance);

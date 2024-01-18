@@ -16,8 +16,8 @@ public partial class StartScene : Node
     [Export] private PlayerInput _playerInput;
     [Export] private PackedScene _tankViewScene;
 
-    private Dictionary<int, TankView> _tankViews;
     private List<BulletView> _bulletViews;
+    private Dictionary<int, TankView> _tankViews;
 
     private const int _PORT = 12043;
 
@@ -26,6 +26,7 @@ public partial class StartScene : Node
         _tankViews = new Dictionary<int, TankView>();
         _bulletViews = new List<BulletView>();
         _uiScene.Initialize(Host, Connect, TryStartGame);
+        _uiScene.ShowClientServerMenu();
     }
 
     public void AddBullet(BulletView bulletView)
@@ -36,6 +37,7 @@ public partial class StartScene : Node
     public void RemoveBullet(BulletView bulletView)
     {
         _bulletViews.Remove(bulletView);
+
         bulletView.Rpc(nameof(bulletView.Destroy));
     }
 
@@ -61,10 +63,11 @@ public partial class StartScene : Node
         int seed = Random.Shared.Next(int.MaxValue);
         _worldScene.Rpc(nameof(_worldScene.InitializeMaze), seed);
         _worldScene.Rpc(nameof(_worldScene.GenerateMaze));
-        
+
         foreach (KeyValuePair<int, LobbyClientData> clientData in lobbyViewClientData)
         {
-            _uiScene.scorePanel.RequestCreateScoreInfoView(clientData.Value.id, clientData.Value.name);
+            _uiScene.scorePanel.RequestCreateScoreInfoView(clientData.Value.id, clientData.Value.name,
+                clientData.Value.color);
         }
 
         Rpc(nameof(ResponseStartGame));
@@ -78,8 +81,7 @@ public partial class StartScene : Node
     {
         CreateTankViews();
         InitializeLocalPlayer(_tankViews[Multiplayer.GetUniqueId()]);
-        _uiScene.menu.Hide();
-        _uiScene.lobbyView.Hide();
+        _uiScene.HideAllMenus();
     }
 
     private void RestartGame()
@@ -99,8 +101,6 @@ public partial class StartScene : Node
     private void AddScore()
     {
         GameClientData gameClientData = _gameMode.GetWinner();
-        
-        GD.Print($"{gameClientData.id}");
 
         _uiScene.scorePanel.RequestUpdateView(gameClientData.id, gameClientData.score);
     }
@@ -109,8 +109,8 @@ public partial class StartScene : Node
     {
         Vector2I mazeSize = _worldScene.GetMazeSize();
 
-        return new Vector2(Random.Shared.Next(120, 120 + mazeSize.Y * 16),
-            Random.Shared.Next(120, 120 + mazeSize.X * 16));
+        return new Vector2(Random.Shared.Next(30, 30 + mazeSize.Y * 30),
+            Random.Shared.Next(30, 30 + mazeSize.X * 30));
     }
 
     private void CreateTankViews()
@@ -121,13 +121,21 @@ public partial class StartScene : Node
         {
             TankView tankView = _tankViewScene.Instantiate<TankView>();
             tankView.Initialize(Multiplayer.GetUniqueId() == clientData.Value.id, clientData.Value.color,
-                () => _gameMode.OnClientDead(clientData.Value.id), AddBullet, RemoveBullet);
+                () => OnClientDead(clientData.Value.id), AddBullet, RemoveBullet);
+            if (Multiplayer.IsServer()) tankView.SubscribeHitBox();
             tankView.SetMultiplayerAuthority(clientData.Value.id);
 
             _tankViews.Add(clientData.Value.id, tankView);
 
             _worldScene.CallDeferredExt(nameof(_worldScene.AddChild), tankView, true);
         }
+    }
+
+    private void OnClientDead(int id)
+    {
+        if (!Multiplayer.IsServer()) return;
+
+        _gameMode.OnClientDead(id);
     }
 
     private void InitializeLocalPlayer(TankView tankView)
@@ -141,10 +149,13 @@ public partial class StartScene : Node
     private void ServerReady()
     {
         _gameMode.Initialize(RestartGame);
+        _uiScene.HideAllMenus();
     }
 
     private void ClientReady()
     {
+        _uiScene.ShowClientMenu();
+
         _uiScene.GetConnectedClientData();
         _uiScene.AddClientData();
         _uiScene.UpdateClientData();
