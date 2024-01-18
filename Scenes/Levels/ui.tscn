@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dmijeh8wklrdm"]
+[gd_scene load_steps=6 format=3 uid="uid://dmijeh8wklrdm"]
 
 [ext_resource type="Script" path="res://Scripts/Scenes/UiScene.cs" id="1_imy4l"]
 [ext_resource type="PackedScene" uid="uid://d53i0wiolavj" path="res://Scenes/Prefabs/GUI/hue_picker.tscn" id="2_d053n"]
+[ext_resource type="PackedScene" uid="uid://du2ewtjdmnlfw" path="res://Scenes/Prefabs/GUI/score_info.tscn" id="3_pnx2y"]
 [ext_resource type="PackedScene" uid="uid://qp7majsgqgje" path="res://Scenes/Prefabs/GUI/lobby.tscn" id="3_qhebw"]
+[ext_resource type="Script" path="res://Scripts/Gui/ScorePanel.cs" id="3_ynpjt"]
 
-[node name="Ui" type="Control" node_paths=PackedStringArray("readyCheckBox", "addressInput", "nicknameInput", "lobbyView", "huePicker", "_hostButton", "_connectButton", "_startGameButton")]
+[node name="Ui" type="Control" node_paths=PackedStringArray("readyCheckBox", "addressInput", "nicknameInput", "lobbyView", "scorePanel", "huePicker", "menu", "_hostButton", "_connectButton", "_startGameButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +20,9 @@ readyCheckBox = NodePath("Menu/VBoxContainer/CheckBox")
 addressInput = NodePath("Menu/VBoxContainer/AddressInput")
 nicknameInput = NodePath("Menu/VBoxContainer/NicknameInput")
 lobbyView = NodePath("Lobby")
+scorePanel = NodePath("Scores")
 huePicker = NodePath("Menu/VBoxContainer/HuePicker")
+menu = NodePath("Menu")
 _hostButton = NodePath("Menu/VBoxContainer/HostButton")
 _connectButton = NodePath("Menu/VBoxContainer/ConnectButton")
 _startGameButton = NodePath("Menu/VBoxContainer/StartGameButton")
@@ -81,6 +85,26 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 3
 text = "Is Ready"
+
+[node name="Scores" type="MarginContainer" parent="." node_paths=PackedStringArray("_scoreContainer")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -214.0
+offset_top = -181.0
+offset_right = -10.0
+offset_bottom = 181.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("3_ynpjt")
+_scoreInfoViewScene = ExtResource("3_pnx2y")
+_scoreContainer = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Scores"]
+layout_mode = 2
 
 [node name="Lobby" parent="." instance=ExtResource("3_qhebw")]
 custom_minimum_size = Vector2(200, 500)

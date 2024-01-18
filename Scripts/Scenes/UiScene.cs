@@ -12,7 +12,9 @@ public partial class UiScene : Control
     [Export] public LineEdit addressInput { get; private set; }
     [Export] public LineEdit nicknameInput { get; private set; }
     [Export] public LobbyView lobbyView { get; private set; }
+    [Export] public ScorePanel scorePanel { get; private set; }
     [Export] public HuePicker huePicker { get; private set; }
+    [Export] public Control menu { get; private set; }
 
 
     [Export] private Button _hostButton;
@@ -40,16 +42,16 @@ public partial class UiScene : Control
     {
         lobbyView.RpcServerOnly(nameof(lobbyView.RequestUpdateClientData), GetClientData());
     }
-
+    
     private string GetClientData()
     {
-        ClientData clientData = new ClientData();
+        LobbyClientData lobbyClientData = new LobbyClientData();
 
-        clientData.id = Multiplayer.GetUniqueId();
-        clientData.color = huePicker.color;
-        clientData.name = nicknameInput.Text;
-        clientData.isReady = readyCheckBox.ButtonPressed;
+        lobbyClientData.id = Multiplayer.GetUniqueId();
+        lobbyClientData.color = huePicker.color;
+        lobbyClientData.name = nicknameInput.Text;
+        lobbyClientData.isReady = readyCheckBox.ButtonPressed;
 
-        return JsonSerializer.Serialize(clientData);
+        return JsonSerializer.Serialize(lobbyClientData);
     }
 }

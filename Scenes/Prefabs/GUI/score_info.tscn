@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://du2ewtjdmnlfw"]
+
+[ext_resource type="Script" path="res://Scripts/Gui/ScoreInfoView.cs" id="1_tslk3"]
+
+[node name="ScoreInfo" type="Control" node_paths=PackedStringArray("_name", "_score")]
+custom_minimum_size = Vector2(210, 30)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_tslk3")
+_name = NodePath("ColorRect/Name")
+_score = NodePath("ColorRect/Score")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 0.121569, 0.607843)
+
+[node name="Name" type="Label" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -11.0
+offset_right = -64.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "nickname"
+vertical_alignment = 1
+clip_text = true
+
+[node name="Score" type="Label" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 156.0
+offset_top = -11.0
+offset_right = -10.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1234"
+horizontal_alignment = 2
+vertical_alignment = 1
+clip_text = true

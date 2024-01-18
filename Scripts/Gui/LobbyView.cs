@@ -5,17 +5,19 @@ using Godot;
 
 namespace AXTanks.Scripts.Gui;
 
-public partial class LobbyView : Node
+public partial class LobbyView : Control
 {
+    public IReadOnlyDictionary<int, LobbyClientData> clientData => _clientData;
+
     [Export] private PackedScene _playerInfoViewScene;
     [Export] private VBoxContainer _infoContainer;
 
-    private Dictionary<int, ClientData> _clientData;
+    private Dictionary<int, LobbyClientData> _clientData;
     private Dictionary<int, PlayerInfoView> _playerInfoViews;
 
     public override void _Ready()
     {
-        _clientData = new Dictionary<int, ClientData>();
+        _clientData = new Dictionary<int, LobbyClientData>();
         _playerInfoViews = new Dictionary<int, PlayerInfoView>();
     }
 
@@ -23,17 +25,16 @@ public partial class LobbyView : Node
     public void RequestGetConnectedClientData(int id)
     {
         RpcId(id, nameof(ResponseGetConnectedClientData), JsonSerializer.Serialize(_clientData));
-
-        foreach (KeyValuePair<int, ClientData> clientData in _clientData)
-        {
-            GD.Print($"{clientData.Value.id}_{clientData.Value.name}");
-        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
     public void RequestUpdateClientData(string data)
     {
         Rpc(nameof(ResponseUpdateClientData), data);
+
+        LobbyClientData lobbyClientData = JsonSerializer.Deserialize<LobbyClientData>(data);
+
+        _clientData[lobbyClientData.id] = lobbyClientData;
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
@@ -41,17 +42,17 @@ public partial class LobbyView : Node
     {
         Rpc(nameof(ResponseAddClientData), data);
 
-        ClientData clientData = JsonSerializer.Deserialize<ClientData>(data);
+        LobbyClientData lobbyClientData = JsonSerializer.Deserialize<LobbyClientData>(data);
 
-        _clientData.Add(clientData.id, clientData);
+        _clientData.Add(lobbyClientData.id, lobbyClientData);
     }
 
     [Rpc]
     private void ResponseGetConnectedClientData(string data)
     {
-        _clientData = JsonSerializer.Deserialize<Dictionary<int, ClientData>>(data);
+        _clientData = JsonSerializer.Deserialize<Dictionary<int, LobbyClientData>>(data);
 
-        foreach (KeyValuePair<int, ClientData> clientData in _clientData)
+        foreach (KeyValuePair<int, LobbyClientData> clientData in _clientData)
         {
             CreatePlayerInfoView(clientData.Value);
         }
@@ -60,31 +61,31 @@ public partial class LobbyView : Node
     [Rpc]
     public void ResponseUpdateClientData(string data)
     {
-        ClientData clientData = JsonSerializer.Deserialize<ClientData>(data);
+        LobbyClientData lobbyClientData = JsonSerializer.Deserialize<LobbyClientData>(data);
 
-        _clientData[clientData.id] = clientData;
-        _playerInfoViews[clientData.id].UpdateView(clientData);
+        _clientData[lobbyClientData.id] = lobbyClientData;
+        _playerInfoViews[lobbyClientData.id].UpdateView(lobbyClientData);
     }
 
 
     [Rpc]
     public void ResponseAddClientData(string data)
     {
-        ClientData clientData = JsonSerializer.Deserialize<ClientData>(data);
+        LobbyClientData lobbyClientData = JsonSerializer.Deserialize<LobbyClientData>(data);
 
-        _clientData.Add(clientData.id, clientData);
+        _clientData.Add(lobbyClientData.id, lobbyClientData);
 
-        CreatePlayerInfoView(clientData);
+        CreatePlayerInfoView(lobbyClientData);
     }
 
-    private void CreatePlayerInfoView(ClientData clientData)
+    private void CreatePlayerInfoView(LobbyClientData lobbyClientData)
     {
         PlayerInfoView instance = _playerInfoViewScene.Instantiate<PlayerInfoView>();
 
         _infoContainer.AddChild(instance, true);
 
-        instance.UpdateView(clientData);
+        instance.UpdateView(lobbyClientData);
 
-        _playerInfoViews.Add(clientData.id, instance);
+        _playerInfoViews.Add(lobbyClientData.id, instance);
     }
 }

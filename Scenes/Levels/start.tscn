@@ -1,22 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://cocoy1aekyx4c"]
+[gd_scene load_steps=7 format=3 uid="uid://cocoy1aekyx4c"]
 
 [ext_resource type="Script" path="res://Scripts/Scenes/StartScene.cs" id="1_p1gyy"]
 [ext_resource type="PackedScene" uid="uid://dmijeh8wklrdm" path="res://Scenes/Levels/ui.tscn" id="2_id865"]
 [ext_resource type="PackedScene" uid="uid://badbifaatyebj" path="res://Scenes/Prefabs/tank_view.tscn" id="2_ktcjh"]
 [ext_resource type="PackedScene" uid="uid://ckvvt7175eeg1" path="res://Scenes/Levels/world.tscn" id="3_qy0gq"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerInput.cs" id="4_q71wn"]
+[ext_resource type="Script" path="res://Scripts/Multiplayer/GameMode.cs" id="6_8xadx"]
 
-[node name="Start" type="Node" node_paths=PackedStringArray("_uiScene", "_camera2D", "_worldScene", "_playerInput")]
+[node name="Start" type="Node" node_paths=PackedStringArray("_uiScene", "_camera2D", "_gameMode", "_worldScene", "_playerInput")]
 script = ExtResource("1_p1gyy")
 _uiScene = NodePath("Ui")
 _camera2D = NodePath("Camera2D")
+_gameMode = NodePath("GameMode")
 _worldScene = NodePath("World")
 _playerInput = NodePath("Input")
 _tankViewScene = ExtResource("2_ktcjh")
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Scenes/Prefabs/tank_view.tscn", "res://Scenes/Prefabs/bullet_view.tscn")
-spawn_path = NodePath("../World")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -33,3 +31,6 @@ offset_right = -19.0
 offset_bottom = 68.0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+
+[node name="GameMode" type="Node" parent="."]
+script = ExtResource("6_8xadx")

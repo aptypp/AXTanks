@@ -6,25 +6,26 @@ namespace AXTanks.Scripts.Player;
 
 public partial class TankView : CharacterBody2D
 {
-    public int id => _id;
-
-    [Export] private int _id;
     [Export] private float _moveSpeed;
     [Export] private float _rotationSpeed;
     [Export] private Node2D _bulletPosition;
+    [Export] private Sprite2D _view;
     [Export] private PackedScene _bulletScene;
 
     private Vector2 _moveDirection;
+    private Action _onDead;
+    private Action<BulletView> _addBullet;
+    private Action<BulletView> _removeBullet;
     private bool _isLocalPlayer;
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public void Initialize(int id)
+    public void Initialize(bool isLocalPlayer, Color color, Action onDead, Action<BulletView> addBullet,
+        Action<BulletView> removeBullet)
     {
-        _id = id;
-
-        SetMultiplayerAuthority(id);
-
-        _isLocalPlayer = Multiplayer.GetUniqueId() == id;
+        _isLocalPlayer = isLocalPlayer;
+        _view.Modulate = color;
+        _onDead = onDead;
+        _removeBullet = removeBullet;
+        _addBullet = addBullet;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -42,7 +43,7 @@ public partial class TankView : CharacterBody2D
     {
         if (ProcessMode == ProcessModeEnum.Disabled) return;
 
-        this.RpcServerOnly(nameof(SpawnBullet));
+        this.RpcServerOnly(nameof(RequestSpawnBullet));
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -50,6 +51,7 @@ public partial class TankView : CharacterBody2D
     {
         ProcessMode = ProcessModeEnum.Disabled;
         Hide();
+        _onDead();
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -62,21 +64,39 @@ public partial class TankView : CharacterBody2D
     }
 
     [Rpc]
-    private void SpawnBullet()
+    private void RequestSpawnBullet()
     {
-        BulletView bulletInstance = _bulletScene.Instantiate<BulletView>();
+        BulletView bulletView = CreateBullet();
 
-        bulletInstance.Position = _bulletPosition.GlobalPosition;
-        bulletInstance.Rotation = Rotation;
-        bulletInstance.HitTank += OnHitTank;
+        _addBullet(bulletView);
+        bulletView.Initialize(_removeBullet);
 
-        GetParent().AddChild(bulletInstance, true);
+        Rpc(nameof(ResponseSpawnBullet));
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+    private void ResponseSpawnBullet()
+    {
+        CreateBullet();
     }
 
     private void OnHitTank(TankView tankView)
     {
         tankView.Rpc(nameof(tankView.Die));
-        tankView.Rpc(nameof(tankView.Respawn),
-            new Vector2(Random.Shared.Next(100, 300), Random.Shared.Next(-300, -100)));
+    }
+
+    private BulletView CreateBullet()
+    {
+        BulletView bulletInstance = _bulletScene.Instantiate<BulletView>();
+        
+        bulletInstance.Position = _bulletPosition.GlobalPosition;
+        bulletInstance.Rotation = Rotation;
+        bulletInstance.HitTank += OnHitTank;
+
+        GetParent().AddChild(bulletInstance, true);
+
+        bulletInstance.SetMultiplayerAuthority(1);
+
+        return bulletInstance;
     }
 }

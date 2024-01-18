@@ -9,12 +9,12 @@ public partial class PlayerInfoView : Node
     [Export] private ColorRect _color;
     [Export] private ReadyState _readyState;
 
-    public void UpdateView(ClientData clientData)
+    public void UpdateView(LobbyClientData lobbyClientData)
     {
-        _name.Text = clientData.name;
-        _color.Color = clientData.color;
+        _name.Text = lobbyClientData.name;
+        _color.Color = lobbyClientData.color;
         
-        if (clientData.isReady) _readyState.ToReadyState();
+        if (lobbyClientData.isReady) _readyState.ToReadyState();
         else _readyState.ToNotReadyState();
     }
 

@@ -1,6 +1,7 @@
 using System;
 using AXTanks.Scripts.Extensions;
 using Godot;
+using Godot.Collections;
 
 namespace AXTanks.Scripts.Maze;
 
@@ -27,6 +28,15 @@ public partial class MazeGenerator : Node2D
         _seed = seed;
         _random = new Random(_seed);
         _mazeGeneratorModel = new MazeGeneratorModel(_random);
+    }
+
+    public void Clear()
+    {
+        Array<Node> children = _mazeParent.GetChildren();
+        for (int childrenIndex = children.Count - 1; childrenIndex >= 0; childrenIndex--)
+        {
+            children[childrenIndex].QueueFree();
+        }
     }
 
     public void Generate()
